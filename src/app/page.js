@@ -1,69 +1,34 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+import { useCallback, useState } from "react";
+import BirthYearGate from "../components/BirthYearGate";
+import BirthdayQuestionCard from "../components/BirthdayQuestionCard";
+import MemoryLoader from "../components/MemoryLoader";
+import HeroScene from "../components/HeroScene";
+import { site } from "../content/site";
+import IncomingCall from "../components/Incomingcall";
 
 export default function Home() {
+  const [stage, setStage] = useState("gate");
+  const loaderDone = useCallback(() => setStage("hero"), []);
+
+  if (stage === "gate") {
+    return <BirthYearGate onSuccess={() => setStage("question")} />;
+  }
+  if (stage === "question") {
+    return <BirthdayQuestionCard onYes={() => setStage("loader")} />;
+  }
+  if (stage === "loader") {
+    return <MemoryLoader onDone={loaderDone} />;
+  }
+    if (stage === "hero") {
+    return <HeroScene onPickUp={() => setStage("call")} />;
+  }
+    if (stage === "call") {
+    return <IncomingCall onOpenAlbum={() => setStage("album")} />;
+  }
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.js</code> file.
-          </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main style={{ minHeight: "100dvh", display: "grid", placeItems: "center", padding: 24 }}>
+      <p>Album comes in the next step.</p>
+    </main>
   );
 }
