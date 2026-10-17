@@ -1,4 +1,7 @@
-    export function playChime() {
+import { isSoundOn } from "./sound";
+
+export function playChime() {
+  if (!isSoundOn()) return;
   try {
     const Ctx = window.AudioContext || window.webkitAudioContext;
     const ctx = new Ctx();

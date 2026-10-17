@@ -4,6 +4,10 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { site } from "../content/site";
 import { playChime } from "../lib/chime";
+import { loadPhotoTexture } from "../lib/textures";
+import PerfGuard from "./PerfGuard";
+import { useWebGL } from "../lib/webgl";
+import HeroFallback from "./HeroFallback";
 
 const COUNT = site.hero.photoCount;
 const FRONT = 10; // photos 0-9: front ring
@@ -54,28 +58,16 @@ function PhotoFace({ index }) {
   const [map, setMap] = useState(null);
 
   useEffect(() => {
-    let dead = false;
     let real = null;
     const placeholder = makeTexture(index);
     setMap(placeholder);
-    const file = String(index + 1).padStart(2, "0");
-    const loader = new THREE.TextureLoader();
-    const onLoad = (t) => {
-      if (dead) {
-        t.dispose();
-        return;
-      }
-      t.colorSpace = THREE.SRGBColorSpace;
-      t.anisotropy = 4;
+    const cancel = loadPhotoTexture(index, 768, (t) => {
       real = t;
       setMap(t);
       placeholder.dispose();
-    };
-    loader.load(`/photos/${file}.webp`, onLoad, undefined, () =>
-      loader.load(`/photos/${file}.jpg`, onLoad, undefined, () => {})
-    );
+    });
     return () => {
-      dead = true;
+      cancel();
       placeholder.dispose();
       if (real) real.dispose();
     };
@@ -215,6 +207,30 @@ function makeDigitShape(d) {
     s.lineTo(0, 0.55);
     return s;
   }
+  // ---- Paste this INSIDE makeDigitShape(d) in HeroScene.js,
+// ---- right before the line:   // digit 3
+  if (d === 4) {
+    s.moveTo(0, -0.1);
+    s.lineTo(1.05, -0.1);
+    s.lineTo(1.05, -1.1);
+    s.lineTo(1.6, -1.1);
+    s.lineTo(1.6, -0.1);
+    s.lineTo(1.85, -0.1);
+    s.lineTo(1.85, 0.32);
+    s.lineTo(1.6, 0.32);
+    s.lineTo(1.6, 1.6);
+    s.lineTo(1.05, 1.6);
+    s.lineTo(0, 0.32);
+    s.lineTo(0, -0.1);
+    // triangular counter (hole) of the 4
+    const hole = new THREE.Path();
+    hole.moveTo(0.45, 0.32);
+    hole.lineTo(1.05, 0.32);
+    hole.lineTo(1.05, 1.0);
+    hole.lineTo(0.45, 0.32);
+    s.holes.push(hole);
+    return s;
+  }
   // digit 3
   s.moveTo(0.05, 0.6);
   s.bezierCurveTo(0.05, 1.3, 0.4, 1.6, 0.85, 1.6);
@@ -246,7 +262,7 @@ function Gold23({ ctrl }) {
       bevelSegments: 3,
       curveSegments: 16,
     };
-    return [2, 3].map((d) => {
+    return [2, 4].map((d) => {
       const g = new THREE.ExtrudeGeometry(makeDigitShape(d), opts);
       g.computeVertexNormals();
       return g;
@@ -414,6 +430,12 @@ export default function HeroScene({ onPickUp }) {
   const [sel, setSel] = useState(null);
   const [showCall, setShowCall] = useState(false);
   const [inWave, setInWave] = useState(false);
+    const gl = useWebGL();
+  const pick = (i) => {
+    const next = i === null || ctrl.sel === i ? null : i;
+    ctrl.sel = next;
+    setSel(next);
+  };
   const autoCallTimer = useRef(null);
   const callStarted = useRef(false);
 
@@ -543,10 +565,17 @@ export default function HeroScene({ onPickUp }) {
         setSel(null);
       }
     }
-    function onKey(e) {
+       function onKey(e) {
       if (e.key === "Escape" && ctrl.sel !== null) {
         ctrl.sel = null;
         setSel(null);
+      }
+      if (ctrl.scroll > 0.6 && (e.key === "ArrowRight" || e.key === "ArrowLeft")) {
+        e.preventDefault();
+        const step = e.key === "ArrowRight" ? 1 : COUNT - 1;
+        const n = ctrl.sel === null ? 0 : (ctrl.sel + step) % COUNT;
+        ctrl.sel = n;
+        setSel(n);
       }
     }
     onScroll();
@@ -571,6 +600,7 @@ export default function HeroScene({ onPickUp }) {
     <>
       <div ref={heroRef} className={`hero ${ignited ? "ignited" : ""}`}>
         <div className="hero-stage">
+          {gl && (
           <Canvas
             dpr={[1, 1.5]}
             camera={{ position: [0, 0, 6], fov: 50 }}
@@ -584,12 +614,15 @@ export default function HeroScene({ onPickUp }) {
             <ambientLight intensity={0.7} />
             <directionalLight position={[2, 3, 5]} intensity={1.6} color="#ffe2b0" />
             <pointLight position={[0, 0, 4]} intensity={30} color="#ffb85c" />
+            <PerfGuard />
             <CameraRig ctrl={ctrl} />
             <Halo ctrl={ctrl} />
             <Photos ctrl={ctrl} onSelect={setSel} />
             <Gold23 ctrl={ctrl} />
             <Shockwave ctrl={ctrl} />
           </Canvas>
+          )}
+         {gl === false && <HeroFallback sel={sel} ignited={ignited} onSelect={pick} />}
           <div className="hero-title">
             <h1>{site.hero.title}</h1>
             <p>{site.hero.subtitle}</p>

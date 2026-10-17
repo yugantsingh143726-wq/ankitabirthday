@@ -1,5 +1,6 @@
 export const site = {
-  birthYear: "2002", // playful gate hai, real security nahi
+  birthYear: "2002", // playful gate, not real security
+
   gate: {
     title: "Secret",
     titleAccent: "Birthday Gift",
@@ -8,8 +9,10 @@ export const site = {
     button: "Unlock",
     error: "Oops! That's not the right year.",
     retry: "Try Again",
+    hint: "Psst... only the birthday girl knows the answer.",
   },
-   welcome: {
+
+  welcome: {
     line1: "I have made something for you",
     line2: "Do you wanna see it?",
     yes: "YES",
@@ -23,20 +26,21 @@ export const site = {
     ],
     reducedMotionNo: "Still NO? Okay, I'll keep asking... 😄",
     happyReply: "Yayyy! 🎉 Let's go!",
-    temp: "Loader comes in the next step.",
   },
-    loader: {
+
+  loader: {
     minDurationMs: 2500,
     captions: ["DEVELOPING MEMORIES", "ALMOST THERE", "READY"],
-    finalCount: 23,
+    finalCount: 24, // counter 00 -> 24
   },
+
   meta: {
     title: "A Birthday Surprise",
     description: "A private birthday surprise.",
   },
 
-     hero: {
-    photoCount: 22,
+  hero: {
+    photoCount: 22, // number of photos in the hero ring (public/photos/01..)
     title: "Happy Birthday",
     subtitle: "Ankita",
     hint: "Move your finger or cursor to light up the memories",
@@ -45,16 +49,16 @@ export const site = {
     // PLACEHOLDER lines: replace with your own words
     lines: [
       "Today is all yours.",
-      "Twenty-three looks good on you.",
+      "Twenty-four looks good on you.",
       "Scroll down, there is more.",
     ],
     countdownLabel: "Until the next birthday",
     countdownToday: "Today is the day",
-    // PLACEHOLDER: replace with the real birthday month/day
-     birthday: { month: 11, day: 9 },
+    birthday: { month: 11, day: 9 }, // 9 November
     scrollCue: "SCROLL",
   },
-    gallery: {
+
+  gallery: {
     hint: "Tap a memory to bring it closer",
     backHint: "Tap again to put it back",
     // PLACEHOLDER captions: replace with your own
@@ -64,9 +68,9 @@ export const site = {
     ),
     transitionLine: "That was the highlight reel. Wait... is that your phone ringing?",
     pickUp: "Pick up",
-
   },
-    call: {
+
+  call: {
     callerName: "Your Favourite Person",
     incomingLabel: "Incoming video call...",
     accept: "Accept",
@@ -93,5 +97,55 @@ export const site = {
     endedTitle: "Call ended",
     watchAgain: "Watch again",
     openAlbum: "Open the album",
+  },
+
+  album: {
+    coverTitle: "Memories", // PLACEHOLDER
+    coverSub: "Ankita",
+    open: "Open the album",
+    hintClosed: "Tap the cover to open",
+    hintOpen: "Tap a page, or use the buttons, to turn it",
+    prev: "Back",
+    next: "Next",
+    // PLACEHOLDER captions from the spec: replace with your own
+    pages: [
+      { caption: "Our first hello" },
+      { caption: "That chai night" },
+      { caption: "Pure chaos" },
+      { caption: "Golden hour" },
+      { caption: "Road trip" },
+      { caption: "Always us" },
+    ],
+    thanks: "Thank you for being you.",
+    wish: "Make a wish",
+  },
+
+  candles: {
+    count: 24,
+    heading: "Make a wish.",
+    sub: "Then blow out the candles.",
+    blow: "Blow the candles",
+    mic: "or blow into your mic",
+    micListening: "Listening... blow gently towards your microphone",
+    micDenied: "Microphone not available. Please use the button.",
+  },
+
+  letter: {
+    title: "A little note for you",
+    // sample text from the spec (24 instead of 23): replace with your own letter
+    text: "Dear Ankita, 24 suits you. May this year bring you closer to everything you are chasing. Thank you for being the kind of person people are lucky to know.",
+    signoff: "- Yugant Singh",
+  },
+
+  ui: {
+    tag: "A Birthday Surprise", // PLACEHOLDER
+    soundOn: "Turn sound on",
+    soundOff: "Turn sound off",
+  },
+
+  footer: {
+    madeBy: "Made with love by Yugant Singh",
+    happy: "Happy Birthday, Ankita",
+    replay: "Replay",
   },
 };

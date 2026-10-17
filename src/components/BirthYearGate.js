@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { site } from "../content/site";
+import GiftIllustration from "./GiftIllustration";
 
 export default function BirthYearGate({ onSuccess }) {
   const [value, setValue] = useState("");
@@ -24,7 +25,7 @@ export default function BirthYearGate({ onSuccess }) {
     <main className="gate">
       <div className="gate-card">
         <div className="gate-art" aria-hidden="true">
-          <span className="gate-emoji">🎁</span>
+          <GiftIllustration />
         </div>
         <form className="gate-panel" onSubmit={handleSubmit}>
           <h1>
@@ -53,6 +54,7 @@ export default function BirthYearGate({ onSuccess }) {
           )}
         </form>
       </div>
+            <p className="gate-hint">{site.gate.hint}</p>
     </main>
   );
 }

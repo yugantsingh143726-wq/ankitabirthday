@@ -5,6 +5,8 @@ import { startRingtone } from "../lib/ringtone";
 
 const C = site.call;
 const AVATARS = ["/call/profile.webp", "/call/profile.jpg"];
+// The call always lasts this many seconds, then ends by itself (change here if needed)
+const CALL_SECONDS = C.durationSec || 10;
 const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
 const fmt = (s) =>
   `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
@@ -133,9 +135,14 @@ export default function IncomingCall({ onOpenAlbum }) {
     const id = setInterval(() => {
       secsRef.current += 1;
       setSecs(secsRef.current);
+      // auto-end after CALL_SECONDS, whatever the reel length is
+      if (secsRef.current >= CALL_SECONDS) {
+        clearInterval(id);
+        endCall();
+      }
     }, 1000);
     return () => clearInterval(id);
-  }, [phase]);
+  }, [phase, endCall]);
 
   useEffect(() => {
     if (phase !== "active" || reelMissing) return;
@@ -156,14 +163,17 @@ export default function IncomingCall({ onOpenAlbum }) {
     if (!el) return;
     const r = el.getBoundingClientRect();
     const cur = offRef.current;
-    if (!baseRef.current) baseRef.current = { x: r.left - cur.x, y: r.top - cur.y };
+    if (!baseRef.current)
+      baseRef.current = { x: r.left - cur.x, y: r.top - cur.y };
     const { x: baseX, y: baseY } = baseRef.current;
     const pad = 12;
     const loX = pad - baseX;
     const hiX = window.innerWidth - r.width - pad - baseX;
     const loY = pad - baseY;
     const hiY = window.innerHeight - r.height - pad - baseY;
-    const a = acceptRef.current ? acceptRef.current.getBoundingClientRect() : null;
+    const a = acceptRef.current
+      ? acceptRef.current.getBoundingClientRect()
+      : null;
 
     let next = cur;
     for (let i = 0; i < 12; i++) {
@@ -205,8 +215,8 @@ export default function IncomingCall({ onOpenAlbum }) {
             poster="/call/reel-poster.webp"
             playsInline
             autoPlay
+            loop
             preload="auto"
-            onEnded={endCall}
             onError={() => setReelMissing(true)}
           />
         ))}
@@ -214,7 +224,13 @@ export default function IncomingCall({ onOpenAlbum }) {
       {phase !== "ended" && (
         <div className="call-avatar">
           {camState === "live" ? (
-            <video ref={camVideoRef} className="call-cam" muted playsInline autoPlay />
+            <video
+              ref={camVideoRef}
+              className="call-cam"
+              muted
+              playsInline
+              autoPlay
+            />
           ) : avatarSrc ? (
             <img
               src={avatarSrc}
@@ -222,9 +238,7 @@ export default function IncomingCall({ onOpenAlbum }) {
               onError={() => setAvatarIdx((i) => i + 1)}
             />
           ) : (
-            <span className="avatar-ph">
-              {C.avatarPlaceholder}
-            </span>
+            <span className="avatar-ph">{C.avatarPlaceholder}</span>
           )}
         </div>
       )}
@@ -252,7 +266,11 @@ export default function IncomingCall({ onOpenAlbum }) {
                 onFocus={dodge}
                 onClick={dodge}
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true" style={{ transform: "rotate(135deg)" }}>
+                <svg
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  style={{ transform: "rotate(135deg)" }}
+                >
                   <path d={PHONE} />
                 </svg>
               </button>
@@ -260,7 +278,12 @@ export default function IncomingCall({ onOpenAlbum }) {
             </div>
 
             <div ref={acceptRef} className="call-ctl">
-              <button className="btn3d accept" aria-label={C.accept} onClick={accept} autoFocus>
+              <button
+                className="btn3d accept"
+                aria-label={C.accept}
+                onClick={accept}
+                autoFocus
+              >
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d={PHONE} />
                 </svg>
@@ -289,7 +312,10 @@ export default function IncomingCall({ onOpenAlbum }) {
               className="btn-gold tap-play"
               onClick={() => {
                 const v = videoRef.current;
-                if (v) v.play().then(() => setNeedsTap(false)).catch(() => {});
+                if (v)
+                  v.play()
+                    .then(() => setNeedsTap(false))
+                    .catch(() => {});
               }}
             >
               {C.tapToPlay}
@@ -313,15 +339,29 @@ export default function IncomingCall({ onOpenAlbum }) {
                 className="btn3d small"
                 aria-label={camState === "live" ? C.cameraOff : C.cameraOn}
                 aria-pressed={camState === "live"}
-                onClick={() => (camState === "live" || camState === "asking" ? stopCamera() : startCamera())}
+                onClick={() =>
+                  camState === "live" || camState === "asking"
+                    ? stopCamera()
+                    : startCamera()
+                }
               >
                 <span aria-hidden="true">📷</span>
               </button>
-              <span className="call-label">{camState === "live" ? C.cameraOff : C.cameraOn}</span>
+              <span className="call-label">
+                {camState === "live" ? C.cameraOff : C.cameraOn}
+              </span>
             </div>
             <div className="call-ctl">
-              <button className="btn3d small decline" aria-label={C.end} onClick={endCall}>
-                <svg viewBox="0 0 24 24" aria-hidden="true" style={{ transform: "rotate(135deg)" }}>
+              <button
+                className="btn3d small decline"
+                aria-label={C.end}
+                onClick={endCall}
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  style={{ transform: "rotate(135deg)" }}
+                >
                   <path d={PHONE} />
                 </svg>
               </button>

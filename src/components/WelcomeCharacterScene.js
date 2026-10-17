@@ -1,6 +1,8 @@
 "use client";
 import { useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
+import PerfGuard from "./PerfGuard";
+import { useWebGL } from "../lib/webgl";
 
 function Character({ mood }) {
   const root = useRef();
@@ -93,9 +95,21 @@ function Character({ mood }) {
 }
 
 export default function WelcomeCharacterScene({ mood = "idle" }) {
+    const gl = useWebGL();
+  if (gl === false) {
+    const face = mood === "sad" ? "😢" : mood === "idle" ? "😊" : "🥳";
+    const cls = mood === "sad" ? "sad" : mood === "idle" ? "idle" : "happy";
+    return (
+      <div className={`character ${cls}`} role="img" aria-label="Cartoon character">
+        {face}
+      </div>
+    );
+  }
+  if (gl === null) return <div className="character-canvas" />;
   return (
     <div className="character-canvas" role="img" aria-label="3D cartoon character">
       <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0.4, 4], fov: 40 }}>
+        <PerfGuard />
         <ambientLight intensity={0.8} />
         <directionalLight position={[2, 3, 4]} intensity={1.4} />
         <Character mood={mood} />

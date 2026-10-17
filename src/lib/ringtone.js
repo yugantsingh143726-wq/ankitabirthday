@@ -1,6 +1,9 @@
+import { isSoundOn } from "./sound";
+
 // PLACEHOLDER ringtone: synthesized in the browser (no external files).
 // Replace with a self-hosted audio file later if you want a real ringtone.
 export function startRingtone() {
+  if (!isSoundOn()) return () => {};
   let ctx = null;
   let timer = null;
   try {
@@ -25,7 +28,7 @@ export function startRingtone() {
     };
 
     const ring = () => {
-      // two quick double-beeps, then a pause
+      if (!isSoundOn()) return;
       [0, 0.25, 0.9, 1.15].forEach((off) => {
         beep(659.25, off, 0.18);
         beep(783.99, off, 0.18);
