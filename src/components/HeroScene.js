@@ -554,8 +554,11 @@ export default function HeroScene({ onPickUp }) {
       heroRef.current?.style.setProperty("--g", p);
       setInWave(p > 0.6);
       setShowCall(p >= 0.97);
-      if (p >= 0.97 && autoCallTimer.current === null && !callStarted.current) {
-        autoCallTimer.current = window.setTimeout(startCall, 1100);
+            if (p >= 0.97 && autoCallTimer.current === null && !callStarted.current) {
+        autoCallTimer.current = window.setTimeout(() => {
+          autoCallTimer.current = null;
+          if (ctrl.sel === null) startCall();
+        }, 3500);
       } else if (p < 0.97 && autoCallTimer.current !== null) {
         window.clearTimeout(autoCallTimer.current);
         autoCallTimer.current = null;

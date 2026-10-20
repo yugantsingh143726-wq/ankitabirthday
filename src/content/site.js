@@ -71,7 +71,7 @@ export const site = {
   },
 
   call: {
-    callerName: "Your Favourite Person",
+    callerName: "07",
     incomingLabel: "Incoming video call...",
     accept: "Accept",
     decline: "Decline",

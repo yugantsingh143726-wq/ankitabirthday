@@ -179,7 +179,7 @@ function Book({ ctrl, onCover, onLeaf }) {
         img.onerror = onFail;
         img.src = `/album/${file}.${ext}`;
       };
-      tryLoad("webp", () => tryLoad("jpg", () => {}));
+      tryLoad("jpg", () => tryLoad("webp", () => {}));
     });
     return () => {
       dead = true;
@@ -310,7 +310,9 @@ export default function MemoryAlbum({ onWish }) {
 
   const go = useCallback(
     (d) => {
-      const n = clamp(ctrl.step + d, 0, N + 1);
+            const n = clamp(ctrl.step + d, 0, N + 1);
+      if (n === ctrl.step) return;
+      playFlip();
       ctrl.step = n;
       setStep(n);
     },

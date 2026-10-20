@@ -114,7 +114,7 @@ Use a real 3D model or compatible rigged model with animation—not static image
 - Transition line: `That was the highlight reel. Wait... is that your phone ringing?` Cue: `Pick up`.
 
 ### F4 — WhatsApp-style incoming video call
-- Caller: `Your Favourite Person`; never “Mahi” or “MSD” before the reel.
+- Caller: `07 `; never “Mahi” or “MSD” before the reel.
 - Incoming screen, round profile photo, ringtone, two 3D circular controls.
 - Decline always dodges and never works; taunts change. Accept always works.
 - Accept shrinks profile photo into a corner window and plays the reel full-screen with sound.

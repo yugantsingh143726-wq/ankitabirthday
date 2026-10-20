@@ -850,7 +850,7 @@ body[data-stage="hero"] .sound-toggle {
 
 /* profile placeholder text was almost invisible on light glass */
 .call-avatar { color: #4a3a66; font-size: 0.7rem; letter-spacing: 0.12em; }
-.call-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.call-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
 /* the two big buttons never touch the home bar */
 .call .btn3d { margin-bottom: 4px; }

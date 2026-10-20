@@ -4,7 +4,7 @@ import { site } from "../content/site";
 import { startRingtone } from "../lib/ringtone";
 
 const C = site.call;
-const AVATARS = ["/call/profile.webp", "/call/profile.jpg"];
+const AVATARS = ["/call/profile.jpg"];
 // The call always lasts this many seconds, then ends by itself (change here if needed)
 const CALL_SECONDS = C.durationSec || 10;
 const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
@@ -231,6 +231,8 @@ export default function IncomingCall({ onOpenAlbum }) {
               playsInline
               autoPlay
             />
+                    ) : phase === "active" ? (
+            <img src="/call/me.jpg" alt="You" />
           ) : avatarSrc ? (
             <img
               src={avatarSrc}

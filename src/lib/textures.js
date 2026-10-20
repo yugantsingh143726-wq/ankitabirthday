@@ -39,7 +39,7 @@ export function loadPhotoTexture(index, maxH, onTexture) {
     img.onerror = onFail;
     img.src = `/photos/${file}.${ext}`;
   };
-  tryExt("webp", () => tryExt("jpg", () => {}));
+  tryExt("jpg", () => tryExt("webp", () => {}));
   return () => {
     dead = true;
   };
