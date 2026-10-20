@@ -52,7 +52,7 @@ const mood = happy ? "happy" : noCount > 0 ? "sad" : intro ? "dance" : "idle";
   return (
     <main className="question">
       <div className="question-card">
-               <WelcomeCharacterScene mood={mood} />
+                       <WelcomeCharacterScene mood={mood} noCount={noCount} />
         <h1>{w.line1}</h1>
         <p className="question-sub">{w.line2}</p>
         <p className="question-msg" aria-live="polite">{message}</p>

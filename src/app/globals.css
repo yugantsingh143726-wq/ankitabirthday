@@ -3,8 +3,17 @@ html, body { margin: 0; padding: 0; }
 body {
   background: #0a0810;
   color: #f3ead7;
-  font-family: system-ui, sans-serif;
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
   min-height: 100dvh;
+}
+
+:root {
+  --gold: #d4af37;
+  --cream: #f6ecd6;
+  --plum: #0a0810;
+}
+h1, h2, .loader-count, .cd-num, .cd-today {
+  font-family: var(--font-display), Georgia, serif;
 }
 
 .gate { min-height: 100dvh; display: grid; place-items: center; padding: 20px; }
